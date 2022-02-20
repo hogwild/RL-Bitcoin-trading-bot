@@ -8,15 +8,19 @@
 #   Description : additional functions
 #
 #================================================================
+import numpy as np
 import pandas as pd
 from collections import deque
+import matplotlib
+matplotlib.use('Agg') #without this statement, the fig.canvas.to_string_rgb() will return a string with wrong length
 import matplotlib.pyplot as plt
 from mplfinance.original_flavor import candlestick_ohlc
 import matplotlib.dates as mpl_dates
 from datetime import datetime
 import os
 import cv2
-import numpy as np
+
+
 
 def Write_to_file(Date, net_worth, filename='{}.txt'.format(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))):
     for i in net_worth: 
@@ -118,9 +122,11 @@ class TradingGraph:
         self.fig.canvas.draw()
         # convert canvas to image
         img = np.fromstring(self.fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
+        # print("image size:", len(self.fig.canvas.tostring_rgb()));
+        # print("fig size:", self.fig.canvas.get_width_height())
         img  = img.reshape(self.fig.canvas.get_width_height()[::-1] + (3,))
 
-        # img is rgb, convert to opencv's default bgr
+        # img is rgb, convert to opencv's default bgrl
         image = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
         # display image with OpenCV or any operation you like
